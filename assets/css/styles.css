@@ -1,0 +1,102 @@
+/*FOR LOGIN.PHP*/
+
+/*body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  //modify this code to only appear in login.php
+}*/
+
+.signin {
+  max-width: 400px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.search_area {
+  max-width: 900px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+
+
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  font-size: 16px;
+  height: auto;
+  padding: 10px;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/*NAVIGATION BAR FOR DASHBOARD.PHP*/
+
+.navbar-static-top {
+  margin-bottom:20px;
+}
+
+i {
+  font-size:16px;
+}
+
+.nav > li > a {
+  color:#787878;
+}
+  
+footer {
+  margin-top:20px;
+  padding-top:20px;
+  padding-bottom:20px;
+  background-color:#efefef;
+}
+
+/* count indicator near icons */
+.nav>li .count {
+  position: absolute;
+  bottom: 12px;
+  right: 6px;
+  font-size: 9px;
+  background: rgba(51,200,51,0.55);
+  color: rgba(255,255,255,0.9);
+  line-height: 1em;
+  padding: 2px 4px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px;
+}
+
+/*For adding materials*/
+
+.leftMain{
+  width:950px;
+  border-top:1px solid transparent;
+}
