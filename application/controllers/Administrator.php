@@ -63,17 +63,17 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 			if( !$is_logged_in ){
 				redirect('/admin/login', 'refresh');
 			} else {
-				$lfsiid = $this->input->post('lfsiid');
 				$preclass = $this->input->post('preclass');
+				$lfsiid = $this->input->post('lfsiid');
 				$new_lfsi_id = $preclass . $lfsiid;
 				
-				//$this->load->library('form_validation');
-				//$this->form_validation->set_rules('lfsiid', 'LFSI ID','callback_lfsiidchecker');
+				$this->load->library('form_validation');
+				$this->form_validation->set_rules('lfsiid', 'LFSI ID','callback_lfsiidchecker');
 
-				//if ($this->form_validation->run() == false){
-				//	echo '3';
-				//}
-				//else {
+				if ($this->form_validation->run() == false){
+					echo '3';
+				}
+				else {
 					$this->load->model('administrator/check_input_model');
 					$num_lfsiID = $this->check_input_model->lfsiid_check($new_lfsi_id);
 					
@@ -81,7 +81,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 						echo '1';
 					}
 					else echo '2';
-				//}
+				}
 			}
 		}
 
@@ -115,39 +115,6 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 			}
 	    }
 
-		/*
-		*	Function that checks the new input materialid.
-		*/
-		public function check_new_materialid(){
-			$is_logged_in = $this->is_logged_in();
-			if( !$is_logged_in ){
-				redirect('/admin/login', 'refresh');
-			} else {
-				$materialid = $this->input->post('materialid');
-				$preclass = $this->input->post('preclass');
-				$new_matID = $preclass . $materialid;
-				$previous_matID = $this->input->post('previous_matID');
-				
-				$this->load->library('form_validation');
-				$this->form_validation->set_rules('materialid', 'materialID','trim|required|xss_clean|callback_materialid_check');
-
-				if ($this->form_validation->run() == false){
-					echo '3';
-				}
-				else if ($previous_matID == $new_matID){
-					echo '1';
-				}
-				else {
-					$this->load->model('admin/check_input_model');
-					$num_matID = $this->check_input_model->check_materialid($preclass, $materialid);
-					if (intval($num_matID) == 0) {
-						echo '1';
-					}
-					else echo '2';
-				}
-			}
-		}
-
 		public function add_prod(){
 
 			$is_logged_in = $this->is_logged_in();
@@ -157,11 +124,8 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 				$this->no_cache();
 				$data['user'] = $is_logged_in;
 				
-				//$this->load->model('admin/get_stats_model');
 				$this->load->model('administrator/login_model');
-				//$data['stats'] = $this->get_stats_model->get_library_stats();
 				$data['info'] = $this->login_model->get_info();
-				//$this->load->view('admin/admin_home_view', $data);
 				$this->load->view('administrator/add_prod', $data);
 			}
 
@@ -222,6 +186,24 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 			}
 	    }
 
+	    //for viewing and searching products
+	    public function products(){
+			$is_logged_in = $this->is_logged_in();
+			if( !$is_logged_in ){
+				redirect('/admin/login', 'refresh');
+			} else {
+				$this->no_cache();
+				$data['user'] = $is_logged_in;
+				
+				$this->load->model('administrator/login_model');
+				$data['info'] = $this->login_model->get_info();
+				$this->load->model('administrator/search_product_model');
+				$search = ""; 
+				$data['products'] = $this->search_product_model->get_products( $search );
+				$this->load->view('administrator/products', $data);
+			}
+		}
+
 		public function distributors(){
 
 			$is_logged_in = $this->is_logged_in();
@@ -231,11 +213,11 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 				$this->no_cache();
 				$data['user'] = $is_logged_in;
 				
-				//$this->load->model('admin/get_stats_model');
 				$this->load->model('administrator/login_model');
-				//$data['stats'] = $this->get_stats_model->get_library_stats();
 				$data['info'] = $this->login_model->get_info();
-				//$this->load->view('admin/admin_home_view', $data);
+				$this->load->model('administrator/search_distributor_model');
+				$search = ""; 
+				$data['distributors'] = $this->search_distributor_model->get_distributors( $search );
 				$this->load->view('administrator/distributors', $data);
 			}
 
@@ -407,24 +389,6 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 		public function orders(){
 
 			$this->load->view('administrator/orders');
-
-		}
-
-		public function products(){
-			$is_logged_in = $this->is_logged_in();
-			if( !$is_logged_in ){
-				redirect('/admin/login', 'refresh');
-			} else {
-				$this->no_cache();
-				$data['user'] = $is_logged_in;
-				
-				//$this->load->model('admin/get_stats_model');
-				$this->load->model('administrator/login_model');
-				//$data['stats'] = $this->get_stats_model->get_library_stats();
-				$data['info'] = $this->login_model->get_info();
-				//$this->load->view('admin/admin_home_view', $data);
-				$this->load->view('administrator/products', $data);
-			}
 
 		}
 

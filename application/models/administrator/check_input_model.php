@@ -2,11 +2,11 @@
 
 	class Check_input_model extends CI_Model{
 
-		public function lfsiid_check($lfsiid){
+		public function lfsiid_check($new_lfsi_id){
 
 			$sql = "SELECT COUNT(lfsi_id) AS count
 			FROM distributor
-			WHERE lfsi_id LIKE '${lfsiid}'";
+			WHERE lfsi_id LIKE '${new_lfsi_id}'";
 
 			$query = $this->db->query($sql);
 			return $query->row()->count;

@@ -167,14 +167,13 @@
 
             function addDetails(){
 
-                preclass = document.getElementsByName('preclass')[0].innerHTML;
-                lfsiid = add.lfsiid.value;
-                //type = add.type.value;
+                var preclass = document.getElementsByName('preclass')[0].innerHTML;
+                var lfsiid = add.lfsiid.value;
 
                 $.ajax({
                     url: "<?php echo site_url();?>/admin/check_lfsiid",
-                    type: "GET",
-                    data: { preclass: preclass, lfsiid : lfsiid },
+                    type: "POST",
+                    data: { preclass: preclass, lfsiid : lfsiid},
                     success: function (result){
                         if ($.trim(result) == '1'){
 
