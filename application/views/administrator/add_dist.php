@@ -53,7 +53,7 @@
                             <div class="form-group">
 								<label for="address" class="col-sm-2 control-label">Address</label>
 								<div class="col-sm-4">
-									<textarea type="text" name="address" class="form-control" id="address" placeholder="Address" pattern="[A-Z][A-Za-z0-9\ \.\,\-\'\?\!]+" required rows="2" cols="50"></textarea>
+									<textarea type="text" name="address" class="form-control" id="address" placeholder="Address" pattern="[A-Z][A-Za-z0-9\ \.\,\-\'\?\!]+" required rows="3" cols="75"></textarea>
 								</div>
 								<span style="color: red;" name="helpaddress">
 							</div>
@@ -66,7 +66,7 @@
                                 <span style="color: red;" name="helpcontactnum">
                             </div>
 
-                            <div id="edvol_div" class="form-group"><br />
+                            <div class="form-group"><br />
                                 <label for="emailadd" class="col-sm-2 control-label">Email Address</label>
                                 <div class="form-inline col-sm-2">
                                     <input type="text" name="emailadd" class="form-control" id="emailadd" placeholder="someone@example.com" pattern="^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$">
@@ -101,7 +101,7 @@
                     title: "Confirmation",
                     buttons: {
                             yes: {
-                            label: "Save",
+                            label: "Yes",
                             className: "btn-primary",
                             callback: function() {
                                                             

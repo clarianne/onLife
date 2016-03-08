@@ -6,23 +6,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 		public function __construct(){
 			parent::__construct();
-			//$this->is_logged_in();
 		}
-
-		/*public function index(){
-
-			//to add soon, if the user is logged in or not
-			//if logged in:
-			//$this->load->view('administrator/dashboard.php');
-			//else
-			//$this->load->view('administrator/login.php');
-			$is_logged_in = $this->is_logged_in();
-			if( !$is_logged_in ){
-				redirect('/admin/login', 'refresh');
-			} else {
-			$this->load->view('administrator/dashboard'); }//for now hehe
-
-		}*/
 
 		public function add_dist(){
 			
@@ -194,15 +178,39 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 			} else {
 				$this->no_cache();
 				$data['user'] = $is_logged_in;
-				
+				$this->load->model('administrator/admin_model');
+				$this->load->library('javascript');
 				$this->load->model('administrator/login_model');
 				$data['info'] = $this->login_model->get_info();
-				$this->load->model('administrator/search_product_model');
-				$search = ""; 
-				$data['products'] = $this->search_product_model->get_products( $search );
-				$this->load->view('administrator/products', $data);
+				
+				if($this->input->post('search_products')!=''){
+					//$filter = $this->input->post('filter');
+					$word = $this->db->escape_str($this->input->post('search'));
+
+					$words = explode(" ", $word);
+					$data['sql2'] = array();
+					foreach ($words as $keyword) {
+						$query_result = $this->admin_model->search_prod($keyword);
+						foreach($query_result as $entry){
+							if(!in_array($entry, $data['sql2'])){
+								array_push($data['sql2'], $entry);
+						    }
+						}
+					}
+					$data['flag'] = $data['sql2'];
+					if (count($data['sql2']) == 0){
+						$data['sql2'] = $this->admin_model->viewAll_prod();
+					}
+					$this->load->view('administrator/products',$data);
+
+				}else{
+					$data['sql2'] = $this->admin_model->viewAll_prod();
+					$data['flag'] = $data['sql2'];
+					$this->load->view('administrator/products',$data);
+				}
 			}
-		}
+			}
+		
 
 		public function distributors(){
 
@@ -212,16 +220,107 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 			} else {
 				$this->no_cache();
 				$data['user'] = $is_logged_in;
-				
+				$this->load->model('administrator/admin_model');
+				$this->load->library('javascript');
 				$this->load->model('administrator/login_model');
 				$data['info'] = $this->login_model->get_info();
-				$this->load->model('administrator/search_distributor_model');
-				$search = ""; 
-				$data['distributors'] = $this->search_distributor_model->get_distributors( $search );
-				$this->load->view('administrator/distributors', $data);
+				
+				if($this->input->post('search_distributors')!=''){
+					//$filter = $this->input->post('filter');
+					$word = $this->db->escape_str($this->input->post('search'));
+
+					$words = explode(" ", $word);
+					$data['sql2'] = array();
+					foreach ($words as $keyword) {
+						$query_result = $this->admin_model->search_dist($keyword);
+						foreach($query_result as $entry){
+							if(!in_array($entry, $data['sql2'])){
+								array_push($data['sql2'], $entry);
+						    }
+						}
+					}
+					$data['flag'] = $data['sql2'];
+					if (count($data['sql2']) == 0){
+						$data['sql2'] = $this->admin_model->viewAll_dist();
+					}
+					$this->load->view('administrator/distributors',$data);
+
+				}else{
+					$data['sql2'] = $this->admin_model->viewAll_dist();
+					$data['flag'] = $data['sql2'];
+					$this->load->view('administrator/distributors',$data);
+				}
 			}
 
 		}
+
+		public function update_distributor(){	
+
+			$is_logged_in = $this->is_logged_in();
+			if( !$is_logged_in ){
+				redirect('/admin/login', 'refresh');
+			} else {
+				$this->no_cache();
+				$data['user'] = $is_logged_in;
+				$this->load->model('administrator/admin_model');
+				$this->load->library('javascript');
+				$this->load->model('administrator/login_model');
+				$data['info'] = $this->login_model->get_info();
+				
+				$this->load->model('administrator/update_info_model'); 
+				$lfsi_id = $this->input->post('lfsi_id');
+				if (!$lfsi_id) redirect ("admin/distributors");
+				$data['update_details'] = $this->update_info_model->get_update_details($lfsi_id);		
+				$this->load->view('administrator/update_distributor', $data);
+			}
+				
+		}
+
+		public function update_product(){	
+
+			$is_logged_in = $this->is_logged_in();
+			if( !$is_logged_in ){
+				redirect('/admin/login', 'refresh');
+			} else {
+				$this->no_cache();
+				$data['user'] = $is_logged_in;
+				$this->load->model('administrator/admin_model');
+				$this->load->library('javascript');
+				$this->load->model('administrator/login_model');
+				$data['info'] = $this->login_model->get_info();
+				
+				$this->load->model('administrator/update_info_model'); 
+				$product_code = $this->input->post('product_code');
+				if (!$product_code) redirect ("admin/products");
+				$data['update_details'] = $this->update_info_model->get_prod_update_details($product_code);		
+				$this->load->view('administrator/update_product', $data);
+			}
+				
+		}
+
+		public function dist_update_execution(){
+			// loads the model php file which will interact with the database
+	       	$this->load->model('admin/admin_model'); 
+			$lfsi_id = $this->input->post('lfsi_id');
+			$fname = $this->input->post('fname');
+			$lname = $this->input->post('lname');
+			$address = $this->input->post('address');
+			$contact_num = $this->input->post('contact_num');
+			$email_add = $this->input->post('email_add');
+			$previous_lfsiid = $this->input->post('previous_lfsiid');
+			
+			$distributor_updated_data = array (
+				'lfsi_id' => $lfsi_id,
+				'fname' => $fname,
+				'lname' => $lname,
+				'address' => $address,
+				'contact_num' => $contact_num,
+				'email_add' => $email_add,
+			);
+
+			$this->admin_model->dist_update($distributor_updated_data, $previous_lfsiid);
+
+    	}
 
 
 		public function forgot_password(){
@@ -305,6 +404,31 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 					echo "1";
 				}
 			}
+		}
+
+		/*
+		*	Function that checks the password of the user.
+		*/
+		public function check_password(){
+			$is_logged_in = $this->is_logged_in();
+			if( !$is_logged_in ){ return; }
+
+			$this->load->model('administrator/delete_distributor_model');
+			$pass_count = $this->delete_distributor_model->check_combination();
+			if($pass_count != 1){echo "Password error!";}
+			else{echo "1";}
+			//return $this->delete_distributor_model->check_combination();
+		} 
+		/*
+		*	Function that deletes account of the user.
+		*/
+		public function delete_dist(){
+			$is_logged_in = $this->is_logged_in();
+			if( !$is_logged_in ){ return; }
+			
+			$this->load->model('admin/delete_distributor_model');
+			$this->delete_distributor_model->delete_distributor();
+			//$this->delete_account_model->delete_reservations();
 		}
 
 		public function dashboard(){

@@ -88,7 +88,7 @@
                                 <span style="color: red;" name="helpname">
                             </div>
 
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <label for="length" class="col-sm-2 control-label">Length</label>
                                 <div class="form-inline col-sm-2">
                                     <div class="input-group">
@@ -126,7 +126,7 @@
                                         <span class="input-group-addon">kg</span>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
 
                             <!--<div class="form-group">
                                 <label for="imgurl" class="col-sm-2 control-label">Upload Photo</label>
@@ -255,11 +255,11 @@
                             finalcheckofadd();
                         }
                         else if ($.trim(result) == '2') {
-                            $('#helpproduct_code').html("Product ID already exists.");
+                            $('#helpproduct_code').html("Product code already exists.");
                             showError();
                         }
                         else if ($.trim(result) == '3') {
-                            $('#helpproduct_code').html("Invalid Product ID.");
+                            $('#helpproduct_code').html("Invalid Product code.");
                             showError();
                         }
                     }

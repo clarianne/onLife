@@ -1,0 +1,379 @@
+
+/* MARKETING CONTENT - For index.php to center the
+	marketing content of the page
+
+-------------------------------------------------- */
+
+/* Pad the edges of the mobile views a bit */
+@font-face
+{
+font-family: ebrima;
+src: url(font/ebrima.ttf);
+}
+
+.marketing {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Center align the text within the three columns below the carousel */
+.marketing .col-lg-4 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.marketing h2 {
+  font-weight: normal;
+}
+.marketing .col-lg-4 p {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+/*Body CSS (from signin.css)*/
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+} 
+/*Home page css*/
+
+#container{
+	margin-top:25px;
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+#move {
+	margin-right:150px; 
+}
+
+#fixheight{
+	max-height:250px;
+}
+
+#fixsize{
+	max-height:300px;
+}
+
+#body{
+	max-height:640px;
+}
+#icons{
+	width: 100px; 
+	height: 100px;
+}
+.buttonhref {
+        display: inline-block;
+        outline: none;
+        cursor: pointer;
+        text-align:center; 
+        padding: 7px 10px;
+        text-decoration : none;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+        -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+        box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+
+.buttonhref:hover{
+		text-decoration : none;
+}
+
+.white{
+	color:white;
+	background:#22af25;
+	text-decoration : none;
+}
+
+.white:hover{
+	color:white;
+	background:#0c8400;
+	text-decoration : none;
+}
+
+#font-edit{
+	font-size: 12px;
+}
+
+.navbar{
+	min-height: 65px;
+}
+
+#small{
+	font-size: 10px;
+}
+
+
+/*Search engine for borrower*/
+.tablesearch{
+	text-align: center;
+	border-collapse: collapse;
+	background-color: #efefef;
+	width:100%; 
+	border-color: #999999;
+}
+
+td.tdsearch{
+	padding: 6px;
+	color: #222222;
+	text-align: left;
+}
+
+table.searchengine{
+	width: 100%; 
+	border-collapse: collapse; 
+	border-color: #111111;
+}
+
+input.searchbox{
+	width:360px;
+	size: 50;
+}
+
+a.tooltipLink { color: inherit; } 
+
+#margin{
+	margin-top:60px;
+	background-image: url('images/contbg.png');
+	background-repeat: no-repeat;
+	height:530px;
+	width:1000px;
+}
+
+#margin2{
+	margin-left:50px;
+}
+
+#center{
+	text-align: center;
+}
+
+#imgsize{
+	height:65%;
+	width:65%;
+}
+
+#pimg{
+	 cursor:pointer;
+}
+
+#pimg:hover span{
+    display:block;
+}
+
+#pimg2{
+	 cursor:pointer;
+	-webkit-animation: cssAnimation 2.561s 11 ease;
+	-moz-animation: cssAnimation 2.561s 11 ease;
+	-o-animation: cssAnimation 2.561s 11 ease;
+}
+
+#pimg2:hover span{
+    display:block;
+}
+
+@-webkit-keyframes cssAnimation {
+	from { -webkit-transform: rotate(4deg); }
+	to { -webkit-transform: rotate(360deg); }
+}
+@-moz-keyframes cssAnimation {
+	from { -moz-transform: rotate(4deg); }
+	to { -moz-transform: rotate(360deg); }
+}
+@-o-keyframes cssAnimation {
+	from { -o-transform: rotate(4deg); }
+	to { -o-transform: rotate(360deg); }
+}
+
+#popup{
+    background: none repeat scroll 0 0 #F8F8F8;
+    border: 5px solid #DFDFDF;
+    color: black;
+    font-size: 11px;
+    letter-spacing: 1px;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+    top: -80px;
+    left:-30px;
+    margin-bottom: -25px;
+    display:none;
+
+}
+#popup:after{
+    position: absolute;
+    color: #FFF;
+    font-weight:bold;
+    left: -66px;
+    bottom: -12px;
+    width:40px;
+    background: #97a5db;
+    -moz-border-radius: 6px;
+    -webkit-border-radius:6px;
+    -khtml-border-radius:6px;
+    visibility: hidden;
+}
+
+.error_color{
+	color:red;
+}
+
+.smalltext{
+	font-size:12px;
+}
+
+#navbar-color{
+  background-color: #ffffff;
+}
+
+#imgheight{
+	width:100%;
+	height:250px;
+}
+
+#create-acct{
+	padding: 0px;
+	margin:0px;
+}
+
+#setFont{
+	font-family: ebrima;
+}
+
+#bluehead{
+	background-color: #296293;
+ 	border-color: #ffffff;
+}
+
+.theadcolor{
+	background-color: #b2bdc6;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+    background-color: #41586c;
+    color: #fff;
+    cursor: default;
+    border: 1px solid #dddddd;
+    border-bottom-color: transparent;
+}
+
+.nav-tabs > li > a,
+.nav-tabs > li > a:hover,
+.nav-tabs > li > a:focus {
+    background-color: #eee;
+    cursor: default;
+    border: 1px solid #dddddd;
+    border-bottom-color: transparent;
+}
+
+#glyphcolor{
+	color:#93abc1;
+}
+
+#glyphcolor:hover{
+	color:#73879a;
+}
+
+.notif .dropdown-toggle{
+	background-color: #92afc9;
+}
+
+#tab{
+    padding: 0 32px; /* Or desired space*/
+}
+
+.alertfont{
+	margin-top:20px;
+	font-size:16px;
+	font-weight: bold;
+}
+
+.button-color{
+	color: #41586c;
+}
+
+.error-space{
+  height: 20px;
+  font-size: 12px;
+}
+
+#err{
+	float:left;
+	height:35px;
+	width:170px;
+	padding-top:5px;
+	text-align:center;
+	margin:0px;
+}
+
+#reg{
+	height:25px;
+	padding:0px;
+	margin:0px;
+}
+.back-to-top {
+    position: fixed;
+    bottom: 2em;
+    right: 0px;
+    text-decoration: none;
+    color: #000000;
+    background-color: rgba(235, 235, 235, 0.80);
+    font-size: 12px;
+    padding: 1em;
+    display: none;
+}
+
+.back-to-top:hover {    
+    background-color: rgba(135, 135, 135, 0.50);
+} 
+
+#side-png-background{
+	color:#141414;
+	padding-top:100px;
+	padding-right: 50px;
+	padding-left:10px;
+	width:500px;
+	height:500px;
+	background-image: url(../images/side2.png);
+}
+
+#register-container-margin{
+	margin-top: 18px;
+}
+
+.ul-font{
+	color:#141414;
+	font-size:17px;
+}
+
+#bg{
+	padding:10px;
+	/*background: rgba(211,211,211,0.3);*/
+} 
+
+.badge{
+	background-color:#BC0000;
+}
+
+table.tablesorter .tablesorter-headerRow .tablesorter-headerAsc {
+  background: url("../images/up.fw.png") no-repeat;
+  background-position: center right;
+  cursor: pointer;
+  padding-right: 30px;  
+}
+
+table.tablesorter .tablesorter-headerRow .tablesorter-headerDesc {
+  background: url("../images/down.fw.png") no-repeat;
+  background-position: center right;
+  cursor: pointer;
+  padding-right: 30px;  
+}
+
+table.tablesorter .tablesorter-headerRow .tablesorter-headerUnSorted {
+  background: url("../images/unsorted.fw.png") no-repeat;
+  background-position: center right;
+  cursor: pointer;
+  padding-right: 30px;  
+}
