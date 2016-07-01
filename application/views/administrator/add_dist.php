@@ -67,18 +67,8 @@
                             </div>
 
                             <div class="form-group"><br />
-                                <label for="emailadd" class="col-sm-2 control-label">Email Address</label>
-                                <div class="form-inline col-sm-2">
-                                    <input type="text" name="emailadd" class="form-control" id="emailadd" placeholder="someone@example.com" pattern="^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$">
-                                </div>
-                                <span style="color: red;" name="helpemail">
-                            </div>
-                            </form>
-
-                            <div class="form-group"><br />
 								<div class="col-sm-offset-2 col-sm-10">
 									<button onclick="addDetails()" class="btn btn-primary" id="addButton" name="add">Add</button>
-									<!--<a href="<?php echo site_url();?>/admin/add_multiple"><button type="button" class="btn btn-default">Add Multiple Material</button></a>-->
 								</div>
 							</div>
 
@@ -111,7 +101,7 @@
                                 var lname = add.lname.value;
                                 var address = add.address.value;
                                 var contact_num = add.contactnum.value;
-                                var email_add = add.emailadd.value;
+                                var dist_status = "ACTIVATED";
                                                             
                                 $.ajax({
                                     type: "POST",
@@ -121,7 +111,7 @@
                                             lname : lname,
                                             address : address,
                                             contact_num : contact_num,
-                                            email_add : email_add,
+                                            dist_status : dist_status;
                                           },
                                     beforeSend: function() {
                                         //$("#con").html('<img src="/function-demos/functions/ajax/images/loading.gif" />');
@@ -192,11 +182,6 @@
                     }
                 });
             }
-                
-                /*window.onload = function() {
-                    add.lfsiid.onblur = validateLFSIID;
-                    $('#container1').modal('hide');
-                }*/
                 
 
                 function validateLFSIID(){

@@ -23,11 +23,14 @@
                                 <li class="active"> Add New Product </li>
                             </ol>
 
-                            <p>All fields are required. If the data for the dimensions and weight are not available, leave it as "0".</p>
+                            <p>All fields are required.</p>
                             <div class="alert-container" style = 'height: 40px; margin-bottom: 19px;'>
                                     <div style="display:none" id="success_add" class = "alert alert-success"></div>
                                     <div style="display:none" id="fail_add" class = "alert alert-danger"></div>
-                            </div> 
+                            </div>
+
+                            <?php echo form_open_multipart('admin/prod_add_execution/'); ?>
+
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Product Code</label>
                                 <div class="col-sm-2">
@@ -89,46 +92,6 @@
                             </div>
 
                             <!--<div class="form-group">
-                                <label for="length" class="col-sm-2 control-label">Length</label>
-                                <div class="form-inline col-sm-2">
-                                    <div class="input-group">
-                                         <input type="text" maxlength="6" class="form-control"  name="length_prod" id="length_prod" pattern="[0-9]+\.[0-9]+" value="0" required>
-                                        <span class="input-group-addon">cm</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="width" class="col-sm-2 control-label">Width</label>
-                                <div class="form-inline col-sm-2">
-                                    <div class="input-group">
-                                        <input type="text" maxlength="6" class="form-control"  name="width_prod" id="width_prod" pattern="[0-9]+\.[0-9]+" value="0" required>
-                                        <span class="input-group-addon">cm</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="height" class="col-sm-2 control-label">Height</label>
-                                <div class="form-inline col-sm-2">
-                                    <div class="input-group">
-                                        <input type="text" maxlength="6" class="form-control" name="height_prod" id="height_prod" pattern="[0-9]+\.[0-9]+" value="0" required>
-                                        <span class="input-group-addon">cm</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="weight" class="col-sm-2 control-label">Weight</label>
-                                <div class="form-inline col-sm-2">
-                                    <div class="input-group">
-                                        <input type="text" maxlength="6" class="form-control" name="weight" id="weight" pattern="[0-9]+\.[0-9]+" value="0" required>
-                                        <span class="input-group-addon">kg</span>
-                                    </div>
-                                </div>
-                            </div>-->
-
-                            <!--<div class="form-group">
                                 <label for="imgurl" class="col-sm-2 control-label">Upload Photo</label>
                                 <div class="form-inline col-sm-3">
                                     <input type="file" name="imgurl" id="imgurl">
@@ -139,7 +102,6 @@
                             <div class="form-group"><br />
                                 <div class="col-sm-offset-2 col-sm-10">
                                     <button onclick="addDetails()" class="btn btn-primary" id="addButton" name="add">Add</button>
-                                   <!-- <a href="<?php echo site_url();?>/admin/add_multiple"><button type="button" class="btn btn-default">Add Multiple Material</button></a>-->
                                 </div>
                             </div>
 
@@ -174,11 +136,8 @@
                                 var ret_price_zero = document.getElementById("ret_price_zero").innerHTML;
                                 var ret_price = add.ret_price.value + ret_price_zero;
                                 var prod_desc = add.prod_desc.value;
-                                var length = add.length_prod.value;
-                                var width = add.width_prod.value;
-                                var height = add.height_prod.value;
-                                var weight = add.weight.value;
-                                var imgurl = "";
+                                //var imgurl = add.imgurl.value;
+                                var prod_avail = "AVAILABLE";
                                                             
                                 $.ajax({
                                     type: "POST",
@@ -189,20 +148,15 @@
                                             dist_price : dist_price,
                                             ret_price : ret_price,
                                             prod_desc : prod_desc,
-                                            length : length,
-                                            width : width,
-                                            height : height,
-                                            weight : weight,
-                                            imgurl : imgurl,
+                                           // imgurl : imgurl,
+                                            prod_avail : prod_avail,
                                           },
                                     beforeSend: function() {
-                                        //$("#con").html('<img src="/function-demos/functions/ajax/images/loading.gif" />');
                                         $("#error_message").html("loading...");
                                     },
 
                                     error: function(xhr, textStatus, errorThrown) {
                                             $('#error_message').html(textStatus);
-                                            //console.log(textStatus);
                                     },
 
                                     success: function( result ){
@@ -239,9 +193,7 @@
 
             function addDetails(){
 
-               // preclass = document.getElementsByName('preclass')[0].innerHTML;
                 product_code = add.product_code.value;
-                //type = add.type.value;
 
                 $.ajax({
                     url: "<?php echo site_url();?>/admin/check_product_code",
@@ -266,15 +218,9 @@
                 });
             }
                 
-                /*window.onload = function() {
-                    add.lfsiid.onblur = validateLFSIID;
-                    $('#container1').modal('hide');
-                }*/
-                
 
                 function validateProdId(){
-                    
-                   // preclass = document.getElementsByName('preclass')[0].innerHTML;
+
                     product_code = add.product_code.value;
                 
                     $.ajax({

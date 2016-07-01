@@ -206,7 +206,7 @@
                                     }
                                 echo "</table>";   
                          ?>
-						<?php include 'includes/pager.php'; ?>
+						
                     </div><!-- main content -->
                 </div><!-- main page -->
         </div><!-- left -->

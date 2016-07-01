@@ -11,6 +11,6 @@
 
 </body>
 <footer class="text-center">
-	<em>&copy; 2015. Life Formula Synergy, Inc.</em>
+	<em>&copy; 2016. Life Formula Synergy, Inc.</em>
 </footer>
 <html>

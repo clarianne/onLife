@@ -16,7 +16,7 @@
 							<h4><?php echo $update_details->prod_name; ?></h4> 
 							<ol class="breadcrumb">
 								<li><a href="<?php echo base_url()?>admin/home">Home</a></li>
-								<li class="active"> Update Products </li>
+								<li class="active"> Update Order </li>
 							</ol>
 						<div class="row">
 							<div class="col-md-6 col-md-offset-3 ">
@@ -33,9 +33,9 @@
 
 								 <div class="form-group">
                                 <label class="col-sm-2 control-label">Product Code</label>
+                                <label id="preclass" name="preclass" class="col-sm-2 control-label"><?php echo $update_details->product_code; ?></label>
                                 <div class="col-sm-2">
                                     <input type="hidden" id="previous_prodcode" name="previous_prodcode" value="<?php echo $update_details->product_code;?>">
-										<input type="text" id="product_code" name="product_code" value="<?php echo $update_details->product_code;?>">
                                 </div>
                                 <span style="color: red;" id="product_code" name="helpproduct_code"></span>
                             </div>
@@ -109,51 +109,30 @@
                                 <span style="color: red;" name="helpname">
                             </div>
 
-                            <!--<div class="form-group">
-                                <label for="length" class="col-sm-2 control-label">Length</label>
-                                <div class="form-inline col-sm-2">
-                                    <div class="input-group">
-                                         <input type="text" maxlength="6" class="form-control"  name="length_prod" id="length_prod" pattern="[0-9]+\.[0-9]+" value="0" required>
-                                        <span class="input-group-addon">cm</span>
-                                    </div>
+                            <div class="form-group">
+                                <label for="prod_avail" class="col-sm-2 control-label">Availability</label>
+                                <div class="col-sm-3">
+                                    <select name="prod_avail" id="prod_avail" class="form-control" >
+                                    <?php
+
+                                    if ($update_details->prod_avail == "AVAILABLE")  
+                                        echo "<option value='AVAILABLE' selected >Available</option>
+                                            <option value='NOT AVAILABLE' >Not Available</option>";
+                                    else if ($update_details->prod_avail == "NOT AVAILABLE")  
+                                        echo "<option value='AVAILABLE' >Available</option>
+                                            <option value='NOT AVAILABLE' selected >Not Available</option>";
+                                    ?>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label for="width" class="col-sm-2 control-label">Width</label>
-                                <div class="form-inline col-sm-2">
-                                    <div class="input-group">
-                                        <input type="text" maxlength="6" class="form-control"  name="width_prod" id="width_prod" pattern="[0-9]+\.[0-9]+" value="0" required>
-                                        <span class="input-group-addon">cm</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="height" class="col-sm-2 control-label">Height</label>
-                                <div class="form-inline col-sm-2">
-                                    <div class="input-group">
-                                        <input type="text" maxlength="6" class="form-control" name="height_prod" id="height_prod" pattern="[0-9]+\.[0-9]+" value="0" required>
-                                        <span class="input-group-addon">cm</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="weight" class="col-sm-2 control-label">Weight</label>
-                                <div class="form-inline col-sm-2">
-                                    <div class="input-group">
-                                        <input type="text" maxlength="6" class="form-control" name="weight" id="weight" pattern="[0-9]+\.[0-9]+" value="0" required>
-                                        <span class="input-group-addon">kg</span>
-                                    </div>
-                                </div>
-                            </div>-->
+                            
 								
 								</form>
 							<div class="form-group">
 								<div class="col-sm-offset-2 col-sm-10"><br />
 									<button onclick="updateDetails()" class="btn btn-primary" id="updateButton" name="update">Update</button>
-									<a href="<?php echo site_url()?>/admin/distributors"><button type="button" class="btn btn-danger">Cancel</button></a>
+									<a href="<?php echo site_url()?>/admin/products"><button type="button" class="btn btn-danger">Cancel</button></a>
 								</div>
 							</div>
 							<br>
@@ -178,23 +157,27 @@
 															
 								//var preclass = document.getElementById("preclass").innerHTML;
 								var previous_prodcode = update.previous_prodcode.value;
-								var product_code = update.product_code.value;
+								//var product_code = update.product_code.value;
                                 var prod_name = update.prod_name.value;
                                 var prod_category = update.prod_category.value;
+                                var prod_desc = update.prod_desc.value;
                                 var dist_price = update.dist_price.value;
                                 var ret_price = update.ret_price.value;
+                                var prod_avail = update.prod_avail.value;
                                 //var imgurl = update.imgurl.value;
 															
 								$.ajax({
 									type: "POST",
 									url: "<?php echo site_url()?>/admin/prod_update_execution",
 									data: { previous_prodcode : previous_prodcode,
-											product_code : product_code,
+											//product_code : product_code,
+											prod_name : prod_name,
                                             prod_category : prod_category,
+                                            prod_desc : prod_desc,
                                             dist_price : dist_price,
                                             ret_price : ret_price,
-                                            imgurl : imgurl,
-                                            //email_add : email_add,
+                                            prod_avail : prod_avail,
+                                           // imgurl : imgurl,
 										  },
 									beforeSend: function() {
 										//$("#con").html('<img src="/function-demos/functions/ajax/images/loading.gif" />');
@@ -215,11 +198,12 @@
 											$("#success_update").fadeIn('slow');
 											document.body.scrollTop = document.documentElement.scrollTop = 0;
 											setTimeout(function() { $("#success_update").html("Redirecting to Products Page...");
-																	window.location.href = "<?php echo site_url()?>/admin/products/"+product_code; }, 2000);	
+																	window.location.href = "<?php echo site_url()?>/admin/products/"; }, 2000);	
 										}
 									}
 								});
 							}
+
 							},
 							no: {
 								label: "No",
@@ -240,32 +224,9 @@
 
 			function updateDetails(){
 
-				//preclass = document.getElementsByName('preclass')[0].innerHTML;
-				//lfsi_id = update.lfsi_id.value;
 				finalcheckofupdate();
-				
-				$.ajax({
-					url: "<?php echo site_url()?>/admin/check_product_code",
-					type: "POST",
-					data: { product_code : product_code, previous_prodcode : previous_prodcode},
-					success: function (result){
-						if ($.trim(result) == '1'){
-
-							$('#helplfsi_id').html("");
-
-							if (type == 'Book' || type == 'References' || type == 'Journals' || type == 'Magazines') {
-
-								isbn = update.isbn.value;
-								type = update.type.value;
-								previous_isbn = update.previous_isbn.value;
-
-								
-							}
-							else finalcheckofupdate();
-						}
-					}
-				});
 			}
+
 
 				function validateName(){
 					msg = "Invalid input. ";

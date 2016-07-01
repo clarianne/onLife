@@ -7,7 +7,7 @@
 class Login_model extends CI_Model{
 
 	public function get_info(){
-		$query = $this->db->query("SELECT username, password, email, fname, mname, lname, enum, lastsession FROM admin WHERE username LIKE 'lfsi__admin'");
+		$query = $this->db->query("SELECT username, password, email, fname, lname, enum, lastsession FROM admin WHERE username LIKE 'lfsi__admin'");
 		return $query->row();
 	}
 

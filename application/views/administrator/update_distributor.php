@@ -73,13 +73,22 @@
 	                                <span style="color: red;" name="helpcontactnum">
 	                            </div>
 
-	                            <div class="form-group"><br />
-	                                <label for="emailadd" class="col-sm-2 control-label">Email Address</label>
-	                                <div class="form-inline col-sm-2">
-	                                    <input type="text" name="emailadd" class="form-control" value="<?php echo $update_details->email_add;?>" id="emailadd" placeholder="someone@example.com" pattern="^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$">
-	                                </div>
-	                                <span style="color: red;" name="helpemail">
-	                            </div>
+	                             <div class="form-group">
+	                                <label for="dist_status" class="col-sm-2 control-label">Status</label>
+	                                <div class="col-sm-3">
+	                                    <select name="dist_status" id="dist_status" class="form-control" >
+	                                    <?php
+
+	                                    if ($update_details->dist_status == "ACTIVATED")  
+	                                        echo "<option value='ACTIVATED' selected >Activated</option>
+	                                            <option value='DEACTIVATED' >Deactivated</option>";
+	                                    else if ($update_details->dist_status == "DEACTIVATED")  
+	                                        echo "<option value='ACTIVATED' >Activated</option>
+	                                            <option value='DEACTIVATED' selected >Deactivated</option>";
+	                                    ?>
+	                                    </select>
+                               		 </div>
+                            	</div>
 								
 								</form>
 							<div class="form-group">
@@ -115,7 +124,7 @@
                                 var lname = update.lname.value;
                                 var address = update.address.value;
                                 var contact_num = update.contactnum.value;
-                                var email_add = update.emailadd.value;
+                                var dist_status = update.dist_status.value;
 															
 								$.ajax({
 									type: "POST",
@@ -126,7 +135,7 @@
                                             lname : lname,
                                             address : address,
                                             contact_num : contact_num,
-                                            email_add : email_add,
+                                            dist_status : dist_status,
 										  },
 									beforeSend: function() {
 										//$("#con").html('<img src="/function-demos/functions/ajax/images/loading.gif" />');
@@ -147,7 +156,7 @@
 											$("#success_update").fadeIn('slow');
 											document.body.scrollTop = document.documentElement.scrollTop = 0;
 											setTimeout(function() { $("#success_update").html("Redirecting to Distributors Page...");
-																	window.location.href = "<?php echo site_url()?>/admin/distributor/"+lfsi_id; }, 2000);	
+																	window.location.href = "<?php echo site_url()?>/admin/distributors"; }, 2000);	
 										}
 									}
 								});

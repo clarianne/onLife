@@ -81,7 +81,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 				$lname = $this->input->post('lname');
 				$address = $this->input->post('address');
 				$contact_num = $this->input->post('contact_num');
-				$email_add = $this->input->post('email_add');
+				$dist_status = $this->input->post('dist_status');
 
 				
 				$dist_data = array (
@@ -91,7 +91,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 					'address' => $address,
 					'lname' => $lname,
 					'contact_num' => $contact_num,
-					'email_add' => $email_add,
+					'dist_status' => $dist_status
 				);
 				
 
@@ -110,6 +110,8 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 				
 				$this->load->model('administrator/login_model');
 				$data['info'] = $this->login_model->get_info();
+				$this->load->model('administrator/admin_model');
+				$data['unr_count'] = $this->admin_model->view_unr_orders_count();
 				$this->load->view('administrator/add_prod', $data);
 			}
 
@@ -139,17 +141,16 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 				redirect('/admin/login', 'refresh');
 			} else {
 		       	$this->load->model('administrator/admin_model'); 
+		       	
 				$product_code = $this->input->post('product_code');
 				$prod_name = $this->input->post('prod_name');
 				$prod_category = $this->input->post('prod_category');
 				$dist_price = $this->input->post('dist_price');
 				$ret_price = $this->input->post('ret_price');
 				$prod_desc = $this->input->post('prod_desc');
-				$length = $this->input->post('length');
-				$width = $this->input->post('width');
-				$height = $this->input->post('height');
-				$weight = $this->input->post('weight');
-				$imgurl = $this->input->post('imgurl');
+				//$imgurl = $this->input->post('imgurl');
+				$prod_avail = $this->input->post('prod_avail');
+				$imgurl = $this->upload_img();
 				
 				$prod_data = array (
 					'product_code' => $product_code,
@@ -158,11 +159,8 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 					'dist_price' => $dist_price,
 					'ret_price' => $ret_price,
 					'prod_desc' => $prod_desc,
-					'length' => $length,
-					'width' => $width,
-					'height' => $height,
-					'weight' => $weight,
-					'imgurl' => $imgurl,
+					//'imgurl' => $imgurl,
+					'prod_avail' => $prod_avail
 				);
 				
 
@@ -182,6 +180,8 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 				$this->load->library('javascript');
 				$this->load->model('administrator/login_model');
 				$data['info'] = $this->login_model->get_info();
+				$this->load->model('administrator/admin_model');
+				$data['unr_count'] = $this->admin_model->view_unr_orders_count();
 				
 				if($this->input->post('search_products')!=''){
 					//$filter = $this->input->post('filter');
@@ -190,7 +190,7 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 					$words = explode(" ", $word);
 					$data['sql2'] = array();
 					foreach ($words as $keyword) {
-						$query_result = $this->admin_model->search_prod($keyword);
+						$query_result = $this->admin_model->search_prod_avail($keyword);
 						foreach($query_result as $entry){
 							if(!in_array($entry, $data['sql2'])){
 								array_push($data['sql2'], $entry);
@@ -199,18 +199,61 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 					}
 					$data['flag'] = $data['sql2'];
 					if (count($data['sql2']) == 0){
-						$data['sql2'] = $this->admin_model->viewAll_prod();
+						$data['sql2'] = $this->admin_model->viewAll_prod_avail();
 					}
 					$this->load->view('administrator/products',$data);
 
 				}else{
-					$data['sql2'] = $this->admin_model->viewAll_prod();
+					$data['sql2'] = $this->admin_model->viewAll_prod_avail();
 					$data['flag'] = $data['sql2'];
 					$this->load->view('administrator/products',$data);
 				}
 			}
-			}
+		}
+
+
 		
+		public function prod_archive(){
+			$is_logged_in = $this->is_logged_in();
+			if( !$is_logged_in ){
+				redirect('/admin/login', 'refresh');
+			} else {
+				$this->no_cache();
+				$data['user'] = $is_logged_in;
+				$this->load->model('administrator/admin_model');
+				$this->load->library('javascript');
+				$this->load->model('administrator/login_model');
+				$data['info'] = $this->login_model->get_info();
+				$this->load->model('administrator/admin_model');
+				$data['unr_count'] = $this->admin_model->view_unr_orders_count();
+				
+				if($this->input->post('search_products')!=''){
+					//$filter = $this->input->post('filter');
+					$word = $this->db->escape_str($this->input->post('search'));
+
+					$words = explode(" ", $word);
+					$data['sql2'] = array();
+					foreach ($words as $keyword) {
+						$query_result = $this->admin_model->search_prod_notavail($keyword);
+						foreach($query_result as $entry){
+							if(!in_array($entry, $data['sql2'])){
+								array_push($data['sql2'], $entry);
+						    }
+						}
+					}
+					$data['flag'] = $data['sql2'];
+					if (count($data['sql2']) == 0){
+						$data['sql2'] = $this->admin_model->viewAll_prod_notavail();
+					}
+					$this->load->view('administrator/prod_archive',$data);
+
+				}else{
+					$data['sql2'] = $this->admin_model->viewAll_prod_notavail();
+					$data['flag'] = $data['sql2'];
+					$this->load->view('administrator/prod_archive',$data);
+				}
+			}
+		}
 
 		public function distributors(){
 
@@ -224,15 +267,17 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 				$this->load->library('javascript');
 				$this->load->model('administrator/login_model');
 				$data['info'] = $this->login_model->get_info();
+				$this->load->model('administrator/admin_model');
+				$data['unr_count'] = $this->admin_model->view_unr_orders_count();
 				
 				if($this->input->post('search_distributors')!=''){
 					//$filter = $this->input->post('filter');
-					$word = $this->db->escape_str($this->input->post('search'));
+					$word = $this->input->post('search');
 
 					$words = explode(" ", $word);
 					$data['sql2'] = array();
 					foreach ($words as $keyword) {
-						$query_result = $this->admin_model->search_dist($keyword);
+						$query_result = $this->admin_model->search_dist_activated($keyword);
 						foreach($query_result as $entry){
 							if(!in_array($entry, $data['sql2'])){
 								array_push($data['sql2'], $entry);
@@ -241,14 +286,58 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 					}
 					$data['flag'] = $data['sql2'];
 					if (count($data['sql2']) == 0){
-						$data['sql2'] = $this->admin_model->viewAll_dist();
+						$data['sql2'] = $this->admin_model->viewAll_dist_activated();
 					}
 					$this->load->view('administrator/distributors',$data);
 
 				}else{
-					$data['sql2'] = $this->admin_model->viewAll_dist();
+					$data['sql2'] = $this->admin_model->viewAll_dist_activated();
 					$data['flag'] = $data['sql2'];
 					$this->load->view('administrator/distributors',$data);
+				}
+			}
+
+		}
+
+		public function dist_archive(){
+
+			$is_logged_in = $this->is_logged_in();
+			if( !$is_logged_in ){
+				redirect('/admin/login', 'refresh');
+			} else {
+				$this->no_cache();
+				$data['user'] = $is_logged_in;
+				$this->load->model('administrator/admin_model');
+				$this->load->library('javascript');
+				$this->load->model('administrator/login_model');
+				$data['info'] = $this->login_model->get_info();
+				$this->load->model('administrator/admin_model');
+				$data['unr_count'] = $this->admin_model->view_unr_orders_count();
+				
+				if($this->input->post('search_distributors')!=''){
+					//$filter = $this->input->post('filter');
+					$word = $this->input->post('search');
+
+					$words = explode(" ", $word);
+					$data['sql2'] = array();
+					foreach ($words as $keyword) {
+						$query_result = $this->admin_model->search_dist_deactivated($keyword);
+						foreach($query_result as $entry){
+							if(!in_array($entry, $data['sql2'])){
+								array_push($data['sql2'], $entry);
+						    }
+						}
+					}
+					$data['flag'] = $data['sql2'];
+					if (count($data['sql2']) == 0){
+						$data['sql2'] = $this->admin_model->viewAll_dist_deactivated();
+					}
+					$this->load->view('administrator/dist_archive',$data);
+
+				}else{
+					$data['sql2'] = $this->admin_model->viewAll_dist_deactivated();
+					$data['flag'] = $data['sql2'];
+					$this->load->view('administrator/dist_archive',$data);
 				}
 			}
 
@@ -266,11 +355,13 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 				$this->load->library('javascript');
 				$this->load->model('administrator/login_model');
 				$data['info'] = $this->login_model->get_info();
+				$this->load->model('administrator/admin_model');
+				$data['unr_count'] = $this->admin_model->view_unr_orders_count();
 				
 				$this->load->model('administrator/update_info_model'); 
 				$lfsi_id = $this->input->post('lfsi_id');
 				if (!$lfsi_id) redirect ("admin/distributors");
-				$data['update_details'] = $this->update_info_model->get_update_details($lfsi_id);		
+				$data['update_details'] = $this->update_info_model->get_dist_update_details($lfsi_id);		
 				$this->load->view('administrator/update_distributor', $data);
 			}
 				
@@ -288,6 +379,8 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 				$this->load->library('javascript');
 				$this->load->model('administrator/login_model');
 				$data['info'] = $this->login_model->get_info();
+				$this->load->model('administrator/admin_model');
+				$data['unr_count'] = $this->admin_model->view_unr_orders_count();
 				
 				$this->load->model('administrator/update_info_model'); 
 				$product_code = $this->input->post('product_code');
@@ -300,13 +393,13 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 		public function dist_update_execution(){
 			// loads the model php file which will interact with the database
-	       	$this->load->model('admin/admin_model'); 
+	       	$this->load->model('administrator/admin_model'); 
 			$lfsi_id = $this->input->post('lfsi_id');
 			$fname = $this->input->post('fname');
 			$lname = $this->input->post('lname');
 			$address = $this->input->post('address');
 			$contact_num = $this->input->post('contact_num');
-			$email_add = $this->input->post('email_add');
+			$dist_status = $this->input->post('dist_status');
 			$previous_lfsiid = $this->input->post('previous_lfsiid');
 			
 			$distributor_updated_data = array (
@@ -315,36 +408,40 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 				'lname' => $lname,
 				'address' => $address,
 				'contact_num' => $contact_num,
-				'email_add' => $email_add,
+				'dist_status' => $dist_status,
 			);
 
 			$this->admin_model->dist_update($distributor_updated_data, $previous_lfsiid);
 
     	}
 
+    	public function prod_update_execution(){
+			// loads the model php file which will interact with the database
+	       	$this->load->model('administrator/admin_model'); 
+			//$product_code = $this->input->post('product_code');
+			$prod_name = $this->input->post('prod_name');
+			$prod_category = $this->input->post('prod_category');
+			$prod_desc = $this->input->post('prod_desc');
+			$dist_price = $this->input->post('dist_price');
+			$ret_price = $this->input->post('ret_price');
+			$prod_desc = $this->input->post('prod_desc');
+			$prod_avail = $this->input->post('prod_avail');
+			//add imgurl soon
+			$previous_prodcode = $this->input->post('previous_prodcode');
+			
+			$product_updated_data = array (
+				'prod_name' => $prod_name,
+				'prod_category' => $prod_category,
+				'prod_desc' => $prod_desc,
+				'ret_price' => $ret_price,
+				'dist_price' => $dist_price,
+				'prod_desc' => $prod_desc,
+				'prod_avail' => $prod_avail,
+			);
 
-		public function forgot_password(){
+			$this->admin_model->prod_update($product_updated_data, $previous_prodcode);
 
-			$this->load->view('administrator/forgot_password');
-
-		}
-
-		/*public function login(){
-
-			$this->load->view('administrator/login');
-
-		}*/
-
-		//logging in~
-
-		/**
-		* log in function for displaying login form
-		*
-		* @access	public
-		* @param	none
-		* @return	none
-		*
-		*/
+    	}
 
 		public function login(){
 			$is_logged_in = $this->is_logged_in();
@@ -419,17 +516,6 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 			else{echo "1";}
 			//return $this->delete_distributor_model->check_combination();
 		} 
-		/*
-		*	Function that deletes account of the user.
-		*/
-		public function delete_dist(){
-			$is_logged_in = $this->is_logged_in();
-			if( !$is_logged_in ){ return; }
-			
-			$this->load->model('admin/delete_distributor_model');
-			$this->delete_distributor_model->delete_distributor();
-			//$this->delete_account_model->delete_reservations();
-		}
 
 		public function dashboard(){
 
@@ -444,50 +530,15 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 				$this->load->model('administrator/login_model');
 				//$data['stats'] = $this->get_stats_model->get_library_stats();
 				$data['info'] = $this->login_model->get_info();
+				$this->load->model('administrator/admin_model');
+				$data['unr_count'] = $this->admin_model->view_unr_orders_count();
+				$data['unr_5'] = $this->admin_model->view_five_unreleased();
+				$data['r_5'] = $this->admin_model->view_five_released();
 				//$this->load->view('admin/admin_home_view', $data);
 				$this->load->view('administrator/dashboard', $data);
 			}
-
-			//$this->load->view('administrator/dashboard');
 
 		}
-
-
-		/**
-		* function for displaying the home page
-		* of the administrator logged in
-		*
-		* @access	public
-		* @param	none
-		* @return	none
-		*
-		*/
-
-		/*public function home(){
-			$is_logged_in = $this->is_logged_in();
-			if( !$is_logged_in ){
-				redirect('/admin/login', 'refresh');
-			} else {
-				$this->no_cache();
-				$data['user'] = $is_logged_in;
-				
-				//$this->load->model('admin/get_stats_model');
-				$this->load->model('administrator/login_model');
-				//$data['stats'] = $this->get_stats_model->get_library_stats();
-				$data['info'] = $this->login_model->get_info();
-				//$this->load->view('admin/admin_home_view', $data);
-				$this->load->view('administrator/dashboard', $data);
-			}
-		}*/
-
-		/*
-		*	function verification for displaying input text for:
-		*		1. email
-		*		2. password
-		*	input text for email will be required and must be valid email
-		*	input text for password will be required as well
-		*	then it will call the function verify()
-		*/
 
 		public function no_cache(){
 			$this->output->set_header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
@@ -510,12 +561,6 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 			}
 		}
 
-		public function orders(){
-
-			$this->load->view('administrator/orders');
-
-		}
-
 		public function r_orders(){
 
 			$is_logged_in = $this->is_logged_in();
@@ -524,19 +569,86 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 			} else {
 				$this->no_cache();
 				$data['user'] = $is_logged_in;
-				
-				//$this->load->model('admin/get_stats_model');
+				$this->load->model('administrator/admin_model');
+				$this->load->library('javascript');
 				$this->load->model('administrator/login_model');
-				//$data['stats'] = $this->get_stats_model->get_library_stats();
 				$data['info'] = $this->login_model->get_info();
-				//$this->load->view('admin/admin_home_view', $data);
-				$this->load->view('administrator/r_orders', $data);
+				$this->load->model('administrator/admin_model');
+				$data['unr_count'] = $this->admin_model->view_unr_orders_count();
+				
+				if($this->input->post('search_orders')!=''){
+					//$filter = $this->input->post('filter');
+					$word = $this->db->escape_str($this->input->post('search'));
+
+					$words = explode(" ", $word);
+					$data['sql2'] = array();
+					foreach ($words as $keyword) {
+						$query_result = $this->admin_model->search_orders_r($keyword);
+						foreach($query_result as $entry){
+							if(!in_array($entry, $data['sql2'])){
+								array_push($data['sql2'], $entry);
+						    }
+						}
+					}
+					$data['flag'] = $data['sql2'];
+					if (count($data['sql2']) == 0){
+						$data['sql2'] = $this->admin_model->viewAll_orders_released();
+					}
+					$this->load->view('administrator/r_orders',$data);
+
+				}else{
+					$data['sql2'] = $this->admin_model->viewAll_orders_released();
+					$data['flag'] = $data['sql2'];
+					$this->load->view('administrator/r_orders',$data);
+				}
 			}
 
 		}
 
 
 		public function unr_orders(){
+			$is_logged_in = $this->is_logged_in();
+			if( !$is_logged_in ){
+				redirect('/admin/login', 'refresh');
+			} else {
+				$this->no_cache();
+				$data['user'] = $is_logged_in;
+				$this->load->model('administrator/admin_model');
+				$this->load->library('javascript');
+				$this->load->model('administrator/login_model');
+				$data['info'] = $this->login_model->get_info();
+				$this->load->model('administrator/admin_model');
+				$data['unr_count'] = $this->admin_model->view_unr_orders_count();
+				
+				if($this->input->post('search_orders')!=''){
+					//$filter = $this->input->post('filter');
+					$word = $this->db->escape_str($this->input->post('search'));
+
+					$words = explode(" ", $word);
+					$data['sql2'] = array();
+					foreach ($words as $keyword) {
+						$query_result = $this->admin_model->search_orders_unr($keyword);
+						foreach($query_result as $entry){
+							if(!in_array($entry, $data['sql2'])){
+								array_push($data['sql2'], $entry);
+						    }
+						}
+					}
+					$data['flag'] = $data['sql2'];
+					if (count($data['sql2']) == 0){
+						$data['sql2'] = $this->admin_model->viewAll_orders_unreleased();
+					}
+					$this->load->view('administrator/unr_orders',$data);
+
+				}else{
+					$data['sql2'] = $this->admin_model->viewAll_orders_unreleased();
+					$data['flag'] = $data['sql2'];
+					$this->load->view('administrator/unr_orders',$data);
+				}
+			}
+		}
+
+		public function view_orders_unreleased(){
 
 			$is_logged_in = $this->is_logged_in();
 			if( !$is_logged_in ){
@@ -544,18 +656,23 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 			} else {
 				$this->no_cache();
 				$data['user'] = $is_logged_in;
-				
-				//$this->load->model('admin/get_stats_model');
+				$this->load->model('administrator/admin_model');
+				$this->load->library('javascript');
 				$this->load->model('administrator/login_model');
-				//$data['stats'] = $this->get_stats_model->get_library_stats();
 				$data['info'] = $this->login_model->get_info();
-				//$this->load->view('admin/admin_home_view', $data);
-				$this->load->view('administrator/unr_orders', $data);
+				$this->load->model('administrator/admin_model');
+				$data['unr_count'] = $this->admin_model->view_unr_orders_count();
+				
+				$this->load->model('administrator/update_info_model'); 
+				$order_id = $this->input->post('order_id');
+				$lfsi_id = $this->input->post('lfsi_id');
+				//$product_code = $this->input->post('product_code');
+				$data['update_details'] = $this->update_info_model->get_order_details_unreleased($order_id, $lfsi_id/*, $product_code*/);		
+				$this->load->view('administrator/view_orders_unr', $data);
 			}
-
 		}
 
-		public function update_cust(){
+		public function view_orders_released(){
 
 			$is_logged_in = $this->is_logged_in();
 			if( !$is_logged_in ){
@@ -563,34 +680,52 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 			} else {
 				$this->no_cache();
 				$data['user'] = $is_logged_in;
-				
-				//$this->load->model('admin/get_stats_model');
+				$this->load->model('administrator/admin_model');
+				$this->load->library('javascript');
 				$this->load->model('administrator/login_model');
-				//$data['stats'] = $this->get_stats_model->get_library_stats();
 				$data['info'] = $this->login_model->get_info();
-				//$this->load->view('admin/admin_home_view', $data);
-				$this->load->view('administrator/update_cust', $data);
+				$data['unr_count'] = $this->admin_model->view_unr_orders_count();
+				
+				$this->load->model('administrator/update_info_model'); 
+				$order_id = $this->input->post('order_id');
+				$lfsi_id = $this->input->post('lfsi_id');
+				//$product_code = $this->input->post('product_code');
+				$data['update_details'] = $this->update_info_model->get_order_details_released($order_id, $lfsi_id/*, $product_code*/);		
+				$this->load->view('administrator/view_orders_r', $data);
 			}
+
 
 		}
 
-		public function update_prod(){
+		public function order_update_execution(){
+			// loads the model php file which will interact with the database
+	       	$this->load->model('administrator/admin_model'); 
+			//$product_code = $this->input->post('product_code');
+			$order_id = $this->input->post('order_id');
+			$status = $this->input->post('status');
+			//$release_date = $this->input->post('release_date');
+			
+			$released_order_data = array (
+				'status' => $status,
+			);
 
-			$is_logged_in = $this->is_logged_in();
-			if( !$is_logged_in ){
-				redirect('/admin/login', 'refresh');
-			} else {
-				$this->no_cache();
-				$data['user'] = $is_logged_in;
-				
-				//$this->load->model('admin/get_stats_model');
-				$this->load->model('administrator/login_model');
-				//$data['stats'] = $this->get_stats_model->get_library_stats();
-				$data['info'] = $this->login_model->get_info();
-				//$this->load->view('admin/admin_home_view', $data);
-				$this->load->view('administrator/update_prod', $data);
-			}
-		}
+
+			$this->admin_model->order_update($released_order_data, $order_id);
+			$this->admin_model->release_update($order_id);
+
+    	}
+
+    	public function upload_img(){
+
+    		$type = explode('.', $_FILES["pic"]["name"]);
+			$type = strtolower($type[count($type)-1]);
+			$url = "./images/".uniqid(rand()).'.'.$type;
+			if(in_array($type, array("jpg", "jpeg", "gif", "png")))
+				if(is_uploaded_file($_FILES["pic"]["tmp_name"]))
+					if(move_uploaded_file($_FILES["pic"]["tmp_name"],$url))
+						return $url;
+			return "";
+    	}
 
 	}
 
